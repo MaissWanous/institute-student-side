@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Forget</title>
+  </head>
+  <script>
+    async function updateF() {
+      $(document).on("submit", "#ee", function (e) {
+        $.ajax({
+          url: $(this).attr("action"),
+          type: $(this).attr("method"),
+          data: $(this).serialize(),
+          success: async function (html) {
+            let request = async () => {
+              const response = await fetch("http://localhost:8080/resFor");
+              var book;
+              const data = await response.json();
+              if (data.snaps == false) {
+                var s = " ";
+                if (data.forgetInfo != "") {
+                  for (let i = 0; i < data.forgetInfo.length; i++) {
+                    if (data.forgetInfo[i].selected_level != "") {
+                      if (data.forgetInfo[i].flag == true) {
+                        book =
+                          "you are registered on the book and book ID is " +
+                          data.forgetInfo[i].book_id;
+                      } else book = "you aren't registered on the book";
+                      s +=
+                        " <div>----------------------</div>" +
+                        "<span class='sign-span'> Name :</span>" +
+                        data.forgetInfo[i].name +
+                        "<br>" +
+                        "<span class='sign-span'> Phone number :</span>" +
+                        data.forgetInfo[i].tel +
+                        "<br>" +
+                        "<span class='sign-span'> Email :</span>" +
+                        data.forgetInfo[i].email +
+                        "<br>" +
+                        "<span class='sign-span'> Subject :</span>" +
+                        data.forgetInfo[i].selected_subject +
+                        "<br>" +
+                        "<span class='sign-span'> and your level is :</span> " +
+                        data.forgetInfo[i].selected_level +
+                        "<br>" +
+                        "<span class='sign-span'> Book  :</span>" +
+                        book +
+                        "<br>" +
+                        "<span class='sign-span'> Registration number  :</span>" +
+                        data.forgetInfo[i].student_id +
+                        "<br>";
+                    } else {
+                      if (data.forgetInfo[i].flag == true) {
+                        book =
+                          "you are registered on the book and book ID is " +
+                          data.forgetInfo[i].book_id;
+                      } else book = "you aren't registered on the book";
+                      s +=
+                        " <div>----------------------</div>" +
+                        "<span class='sign-span'> Name :</span>" +
+                        data.forgetInfo[i].name +
+                        "<br>" +
+                        "<span class='sign-span'> Phone number :</span>" +
+                        data.forgetInfo[i].tel +
+                        "<br>" +
+                        "<span class='sign-span'> Email :</span>" +
+                        data.forgetInfo[i].email +
+                        "<br>" +
+                        "<span class='sign-span'> Subject :</span>" +
+                        data.forgetInfo[i].selected_subject +
+                        "<br>" +
+                        "<span class='sign-span'> Book  :</span>" +
+                        book +
+                        "<br>" +
+                        "<span class='sign-span'> Registration number  :</span>" +
+                        data.forgetInfo[i].student_id +
+                        "<br>";
+                    }
+                  }
+
+                  document.getElementById("response").innerHTML =
+                    " <div class='info-sign'>Your Informaton is :</div>" + s;
+                } else {
+                  alert("you aren't registered");
+                }
+              } else if (data.snaps == true) {
+                document.getElementById("response").innerHTML =
+                  " <div class='info-sign'>" +
+                  "something went wrong, try to update and submit the form again" +
+                  "</div>";
+              }
+            };
+            await request();
+          },
+        });
+        e.preventDefault();
+      });
+    }
+    $(document).ready(async function () {
+      await updateF();
+    });
+    $(function () {
+      $("#edit").on("click", function () {
+        window.location = "/edit";
+      });
+    });
+    $(function () {
+      $("#delete").on("click", function () {
+        window.location = "/delete1";
+      });
+    });
+  </script>
+
+  <body
+    class="img"
+    style="background-image: url(../images/pexels-polina-kovaleva-5717492.jpg)"
+  >
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <h2 class="heading-section">
+              To retrieve your data , enter your number or email address
+            </h2>
+          </div>
+        </div>
+        <form action="/forgetInfo" method="post" id="ee">
+          <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+              <div class="login-wrap">
+                <div class="form-group mb-3">
+                  <label class="label" for="email">Email Address</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    name="email"
+                    id=""
+                    placeholder="your email"
+                  />
+                  <span class="icon fa fa-envelope-o"></span>
+                </div>
+                <div class="form-group mb-3">
+                  <label class="label" for="email">Phone number </label>
+                  <input
+                    type="tel"
+                    name="tel"
+                    class="form-control"
+                    id=""
+                    placeholder="your number"
+                    pattern="[0-9]{10}"
+                  />
+                  <span class="icon fa fa-phone"></span>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="submit"
+                    value="Submit"
+                    class="form-control btn btn-primary submit px-3"
+                  />
+                </div>
+
+                <div id="response"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <br />
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="login-wrap">
+              <div class="form-group">
+                <button
+                  type="submit"
+                  class="form-control btn btn-primary submit px-3"
+                  id="edit"
+                >
+                  Edit Registeration informaton
+                </button>
+              </div>
+              <div class="form-group">
+                <button
+                  type="submit"
+                  class="form-control btn btn-primary submit px-3"
+                  id="delete"
+                >
+                  To delete your registration
+                </button>
+              </div>
+              <div class="form-group">
+                <button
+                  type="submit"
+                  class="form-control btn btn-primary submit px-3"
+                  onclick="window.location='/'"
+                >
+                  Go Back
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer>
+      <div class="container">
+        <h1 class="logo"><span>D</span>aisy</h1>
+        <p>If you have any issue feel free to drop us a line</p>
+        <p>Find us on</p>
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="form-group">
+              <button
+                type="submit"
+                class="form-control btn btn-primary submit px-3"
+                onclick="window.location='/about'"
+              >
+                About Us
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="copyright">© 2023 <span>Daisy</span>All Right Reserved</div>
+      </div>
+    </footer>
+  </body>
+</html>

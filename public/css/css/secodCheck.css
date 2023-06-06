@@ -1,0 +1,121 @@
+/* Material Button CSS */
+
+@keyframes ripple {
+    0% {
+        box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0);
+    }
+
+    50% {
+        box-shadow: 0px 0px 0px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    100% {
+        box-shadow: 0px 0px 0px 15px rgba(0, 0, 0, 0);
+    }
+}
+
+.frm_checkbox,
+.frm_radio {
+    margin-left: 0px;
+    margin-bottom: 15px !important;
+    text-align: center;
+    font-size: 30px;
+}
+
+.frm_checkbox label,
+.frm_radio label {
+    display: inline-block;
+    height: 25px;
+    position: relative;
+    left: -3%;
+    font-weight: bold;
+    padding: 0 30px;
+    margin-bottom: 0;
+    cursor: pointer;
+    vertical-align: bottom;
+    color: #efebe3;
+}
+
+.frm_checkbox input[type=checkbox],
+.frm_radio input[type=radio] {
+    position: absolute !important;
+    margin-left: -9999px;
+    visibility: hidden;
+}
+
+.frm_checkbox input[type=checkbox]+span,
+.frm_radio input[type=radio]+span {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+}
+
+.frm_checkbox input[type=checkbox]+span,
+.frm_radio input[type=radio]+span {
+    width: 35px;
+    height: 25px;
+    vertical-align: middle;
+}
+
+.frm_checkbox input[type=checkbox]+span:before,
+.frm_checkbox input[type=checkbox]+span:after,
+.frm_radio input[type=radio]+span:before,
+.frm_radio input[type=radio]+span:after {
+    position: absolute;
+    content: '';
+    border-radius: 50%;
+    transition: all .3s ease;
+    transition-property: transform, border-color;
+}
+
+.frm_checkbox input[type=checkbox]:checked+span:before,
+.frm_radio input[type=radio]:checked+span:before {
+    border-color: #007bff;
+    animation: ripple 0.2s linear forwards;
+}
+
+
+
+
+.frm_checkbox input[type=checkbox]+span:before,
+.frm_radio input[type=radio]+span:before {
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.54);
+}
+
+.frm_checkbox input[type=checkbox]+span:after,
+.frm_radio input[type=radio]+span:after {
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    transform: scale(0);
+    background: #007bff;
+}
+
+.frm_checkbox input[type=checkbox]:checked+span:after,
+.frm_radio input[type=radio]:checked+span:after {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+}
+
+/* maiss */
+.info {
+    text-align: center;
+    color: white;
+    padding: 15px;
+    border-bottom: 2px #007bff solid;
+    font-size: 20px;
+}
+
+p.TOFEL {
+    font-size: 25px;
+    color: wheat;
+    background-color: #007bff4f;
+    padding: 0px 19px;
+}

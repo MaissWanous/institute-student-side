@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css" />
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="../css/check.css" />
+  <title>check2</title>
+</head>
+<script>
+  async function updateF() {
+    window.addEventListener("pageshow", function (event) {
+      var historyTraversal =
+        event.persisted ||
+        (typeof window.performance != "undefined" &&
+          window.performance.navigation.type === 2);
+      if (historyTraversal) {
+        // Handle page restore.
+        window.location.reload();
+      }
+    });
+    $(document).on("submit", "#check", function (e) {
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize(),
+        success: async function (html) {
+          let request = async () => {
+            const response = await fetch("http://localhost:8080/che");
+            const data = await response.json();
+            const ans = data.result1;
+            document.getElementById("response").innerHTML =
+              " <div class='info-sign'>" + ans + "</div>";
+          };
+          await request();
+        },
+      });
+      e.preventDefault();
+    });
+  }
+  $(document).ready(async function () {
+
+    await updateF();
+  });
+
+</script>
+
+
+<body>
+  <section class="get-in-touch">
+    <h1 class="title">Enter your code</h1>
+    <form class="contact-form row" action="/check2" id="check" method="post">
+      <div class="form-field col-lg-6">
+        <input id="number" name="code"
+          oninput="this.value = this.value.replace(/[^0-9.]/g,'').replace(/(\..*?)\..*/g, '$1');"
+          class="input-text js-input" type="number" required name="code" />
+        <label class="label" for="number">Your Code</label>
+      </div>
+      <div id="response"></div>
+      <div class="form-field col-lg-12">
+        <input class="submit-btn" type="submit" value="Submit" />
+      </div>
+    </form>
+  </section>
+</body>
+
+</html>

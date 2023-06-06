@@ -1,0 +1,137 @@
+:root {
+  --main-color: #007bff;
+  --main-color-alt: #1987fcb2;
+}
+
+#team:after {
+  z-index: -3;
+  position: static;
+  background-color: rgb(0 0 0 /55%);
+}
+
+header {
+  /* background-color: var(--main-color-alt); */
+  margin: 30px 0;
+  padding: 20px;
+  font-weight: bold;
+  font-size: 25px;
+  color: black;
+}
+
+.team-members .container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+  gap: 65px;
+}
+
+@media (min-width: 1px) {
+  .team-members .container {
+    padding: 0 112px;
+  }
+}
+
+@media (min-width: 550px) {
+  .team-members .container {
+    padding: 0 165px;
+  }
+}
+
+@media (min-width: 989px) {
+  .team-members .container {
+    padding: 0 125px;
+  }
+}
+
+.team-members .box {
+  position: relative;
+}
+
+.team-members .box::after,
+.team-members .box::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  border-radius: 10px;
+  right: -10px;
+  top: -1px;
+  transition: 0.3s;
+}
+
+.team-members .box::before {
+  z-index: -2;
+  background-color: #ececec;
+  width: calc(100% - 52px);
+}
+
+/* .team-members .box::after {
+    z-index: -1;
+    background-image: linear-gradient(50deg, #102f5277, #007bff44, #2576cc4f);
+    width: 0;
+}
+
+.team-members .box:hover::after {
+    width: calc(100% - 52px);
+} */
+
+.team-members .data {
+  display: flex;
+  gap: 40px;
+  padding-top: 60px;
+}
+
+.team-members .social {
+  color: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.team-members .social a {
+  color: #343a40;
+}
+
+.team-members .social a:hover {
+  color: var(--main-color-alt);
+}
+
+.team-members .info {
+  padding-left: 80px;
+  padding-bottom: 13px;
+  color: #343a40;
+}
+
+.team-members .info h3 {
+  color: var(--main-color);
+  padding: 15px 0;
+}
+
+.team-members img {
+  width: calc(100% - 100px);
+  height: 220px;
+  border-radius: 10px;
+  transition: 0.5s;
+}
+
+.team-members .box:hover img {
+  border-radius: 50%;
+  border: dashed 3px;
+  animation: border-color 0.7s infinite;
+  filter: saturate(0.5);
+}
+
+@keyframes border-color {
+  0%,
+  40% {
+    border-color: var(--main-color);
+  }
+
+  80%,
+  100% {
+    border-color: var(--main-color-alt);
+  }
+}
+Header h1 {
+  font-size: 40px;
+  font-weight: bold;
+}

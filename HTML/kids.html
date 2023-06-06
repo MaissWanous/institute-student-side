@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <title>kids</title>
+</head>
+<script>
+  async function updateF() {
+    window.addEventListener("pageshow", function (event) {
+      var historyTraversal =
+        event.persisted ||
+        (typeof window.performance != "undefined" &&
+          window.performance.navigation.type === 2);
+      if (historyTraversal) {
+        // Handle page restore.
+        window.location.reload();
+      }
+    });
+    $(document).on("submit", "#age", function (e) {
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize(),
+        success: async function (html) {
+          let request = async () => {
+            const response = await fetch("http://localhost:8080/res");
+            const data = await response.json();
+            const ans = data.result1;
+            const c = data.Case;
+            if (data.wrong == true) {
+              document.getElementById("response").innerHTML =
+                " <div class='info-sign'>" +
+                " enter your age please " +
+                "</div>";
+            } else {
+              document.getElementById("response").innerHTML =
+                " <div class='info-sign'>" + ans + "</div>";
+              if (c == 1) {
+                $("#level").show();
+                $(".sub").hide();
+              } else {
+                $("#reg").show();
+                $(".sub").hide();
+              }
+            }
+          };
+          await request();
+        },
+      });
+      e.preventDefault();
+    });
+  }
+  $(document).ready(async function () {
+    $("#reg").hide();
+    await updateF();
+  });
+  $(function () {
+    $("#level").on("click", function () {
+      window.location = "/";
+    });
+  });
+  $(function () {
+    $("#reg").on("click", function () {
+      window.location = "/signUp";
+    });
+  });
+</script>
+
+<body class="img" style="
+      background-image: url(../images/kids.jpg);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    ">
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-5">
+          <h2 class="heading-section" id="div">
+            This cours is only for children between the ages of 12 and 3
+          </h2>
+        </div>
+      </div>
+      <form action="kAge" method="post" id="age">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <div class="form-group mb-3">
+              <div class="info-sign" for="">
+                Enter the child's age:
+              </div>
+              <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g,'').replace(/(\..*?)\..*/g, '$1');"
+                class="form-control" id="name" placeholder="age" name="age" />
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="form-group sub">
+              <input type="submit" class="form-control btn btn-primary submit px-3" value="Submit" id="submit" />
+            </div>
+            <div id="response"></div>
+            <div class="form-group">
+              <button type="submit" id="reg" class="form-control btn btn-primary submit px-3">
+                Registe
+              </button>
+            </div>
+            <div class="form-group">
+              <button type="submit" id="level" class="form-control btn btn-primary submit px-3">
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <h1 class="logo"><span>D</span>aisy</h1>
+      <p>If you have any issue feel free to drop us a line</p>
+      <p>Find us on</p>
+      <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+          <div class="form-group">
+            <button type="submit" class="form-control btn btn-primary submit px-3" onclick="window.location='/about'">
+              About Us
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">© 2023 <span>Daisy</span>All Right Reserved</div>
+    </div>
+  </footer>
+</body>
+
+</html>

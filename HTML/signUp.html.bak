@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Document</title>
+</head>
+<script>
+  async function welcome() {
+    const response = await fetch("http://localhost:8080/link1");
+    const response1 = await fetch("http://localhost:8080/link2");
+    const data = await response.json();
+    const data1 = await response1.json();
+    const selectedSubject = data.selected_subject;
+    const selectedLevel = data1.selected_level;
+    console.log(selectedSubject);
+    if (selectedSubject == "English") {
+      document.getElementById("div").innerHTML =
+        "welcome to register in English     " + selectedLevel + " level";
+    } else {
+      document.getElementById("div").innerHTML =
+        "welcome to register in " + selectedSubject;
+    }
+  }
+  async function updateF() {
+    $(document).on("submit", "#form2", function (e) {
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize(),
+        success: async function (html) {
+          let request = async () => {
+            const response = await fetch("http://localhost:8080/link1");
+            const response1 = await fetch("http://localhost:8080/link2");
+            const response2 = await fetch("http://localhost:8080/confirm");
+            const data = await response.json();
+            const data1 = await response1.json();
+            const data2 = await response2.json();
+
+            const selectedSubject = data.selected_subject;
+            const selectedLevel = data1.selected_level;
+            if (data2.email_confirm != "" || data2.confirm != "") {
+              document.getElementById("response").innerHTML =
+                data2.email_confirm + " " + data2.confirm;
+            } else {
+              document.getElementById("response").innerHTML =
+                data2.name + "<br>" + data2.email + "<br>" + data2.tel + "<br>" + data2.timen;
+              $("#btn").show();
+            }
+          };
+          await request();
+        },
+      });
+      e.preventDefault();
+    });
+  }
+  $(document).ready(async function () {
+    $("#btn").hide();
+    await updateF();
+    await welcome();
+  });
+  $("#btn").click(function () {
+    $.post('/registe')
+  })
+</script>
+
+<body>
+  <form action="signUp" method="post" id="form2">
+
+    <div id="div"></div>
+    <br />
+    <input type="text" name="name" id="" placeholder="Enter your name" required />
+    <br />
+    <input type="tel" name="tel" id="" placeholder="your number" pattern="[0-9]{10}" />
+    <br />
+    <input type="email" name="email" id="" placeholder="your email" />
+    <br />
+    <input type="submit" value="submit" />
+    <br />
+    <div id="response"></div>
+  </form>
+  <form action="/registe" method="post">
+    <button type="submit" id="btn">confirm</button>
+  </form>
+
+
+</body>
+
+</html>

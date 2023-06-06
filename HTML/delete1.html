@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <title>Delete</title>
+</head>
+<script>
+  async function updateF() {
+    window.addEventListener("pageshow", function (event) {
+      var historyTraversal = event.persisted ||
+        (typeof window.performance != "undefined" &&
+          window.performance.navigation.type === 2);
+      if (historyTraversal) {
+        // Handle page restore.
+        window.location.reload();
+      }
+    });
+    $(document).on("submit", "#delete11", function (e) {
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize(),
+        success: async function (html) {
+          let request = async () => {
+            const response = await fetch("http://localhost:8080/remove");
+
+            const data = await response.json();
+            if (data.result == "") {
+              if (data.snaps == false) {
+                if (data.result != "") {
+                  document.getElementById("respons").innerHTML = data.result
+                } else {
+                  document.getElementById("respons").innerHTML =
+                    " <div class='info-sign'>Your old Informaton</div>" +
+                    "<span class='sign-span'>Name :</span>" +
+                    data.old_information.name +
+                    "<br>" + "<span class='sign-span'>Phone number :</span>" +
+                    data.old_information.tel +
+                    "<br>" + "<span class='sign-span'>Email :</span>" +
+                    data.old_information.email + "<br>" + "<span class='sign-span'>Subject :</span>"
+                    + data.old_information.selected_subject +
+                    " " + data.old_information.selected_level + "<br>" + "<span class='sign-span'>book :</span>" + " " + data.old_information.flag
+
+                  $(".conf").show();
+                  $("#submit").addClass("opac");
+                }
+              }
+              else if (data.snaps == true) {
+                document.getElementById("respons").innerHTML = " <div class='info-sign'>" + "something went wrong, try to update and submit the form again" + "</div>"
+              }
+            }
+            else if (data.result != "") {
+              alert("Sorry , but this number does not exist");
+            }
+          };
+          await request();
+        },
+      });
+      e.preventDefault();
+    });
+  }
+
+  $(document).ready(async function () {
+    $(".conf").hide();
+    await updateF();
+  });
+
+  $(function () {
+    $("#forget").on("click", function () {
+      window.location = "/forget";
+    });
+  });
+</script>
+<style>
+  .opac {
+    opacity: 0.6;
+  }
+</style>
+
+<body class="img" style="background-image: url(../images/photo_٢٠٢٢-١٢-١٧_٢١-٥١-١١.jpg);">
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-5">
+          <h2 class="heading-section">To delete your information ,
+            please enter the registration number </h2>
+        </div>
+      </div>
+      <form action="/delete1" method="post" id="delete11">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <div class="form-group mb-3">
+              <div class="info-sign" for="password">Registration number</div>
+              <input type="text" name="id" class="form-control" placeholder="Registration number" />
+              <span class="icon fa fa-lock"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="login-wrap">
+              <div id="respons"></div>
+              <div class="form-group">
+                <input type="submit" class="form-control btn btn-primary submit px-3" value="Submit" id="submit" />
+              </div>
+
+      </form>
+
+    </div>
+    </div>
+    </div>
+    <br>
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-5">
+        <div class="login-wrap">
+          <form action="/confirmD" method="post">
+            <div class="form-group mb-3 conf">
+              <label class="label" for="email"> If you are sure you want to delete your registration click here</label>
+              <button class=" form-control btn btn-primary submit px-3 confirm" type="submit" id="btn">confirm</button>
+            </div>
+          </form>
+          <div class="form-group mb-3 forget">
+            <label class="label" for="email"> If you forget your registration number click here</label>
+            <button type="submit" class=" form-control btn btn-primary submit px-3" id="forget">Restor your information
+            </button>
+          </div>
+          <div class="form_group">
+            <button type="submit" class="form-control btn btn-primary submit px-3" onclick="window.location='/'">Go
+              Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <h1 class="logo"> <span>D</span>aisy</h1>
+      <p>If you have any issue </p>
+      <p>Feel free to drop us a line </p>
+      <p>Find us on </p>
+      <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+          <div class="form-group">
+            <button type="submit" class="form-control btn btn-primary submit px-3"
+              onclick="window.location='/about'">About
+              Us</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">© 2023 <span>Daisy</span> All Right Reserved</div>
+    </div>
+
+  </footer>
+</body>
+
+</html>

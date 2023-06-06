@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../css/checkBox.css">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <title>Test</title>
+</head>
+<script>
+  async function updateF() {
+    $(document).on("submit", "#test1", function (e) {
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize(),
+        success: async function (html) {
+          let request = async () => {
+            const response = await fetch("http://localhost:8080/link");
+            const data = await response.json();
+            if (data) $(".ans").removeClass("gray green red");
+
+            const checkbox = data.checkResult;
+            const final = data.final;
+            const checkResult = data.checkResult;
+            document.getElementById("test").innerHTML = " <div class='info-sign'>" + data.result + " </div>";
+
+            for (let i = 0; i < final.length; i++) {
+              if (final[i].status == -1) {
+                $('.ans').eq(i).addClass("gray").text("no answer here and the answer is (" + final[i].answer + " )")
+              }
+              else if (final[i].status == true) {
+                $('.ans').eq(i).addClass("green").text("your answer is true")
+              }
+              else {
+                $('.ans').eq(i).addClass("red").text("your answer (" + data.first1[i] +
+                  ") is false and the correct answer is (" + final[i].answer + ")")
+              }
+            }
+            let j = 8;
+            for (let i = 0; i < checkbox.length; i++) {
+
+              if (checkbox[i].case == -1 && checkbox[i].alert1 == 1)
+                $(".ans").eq(j).addClass("red").text("You have to choose two options")
+              else if (checkbox[i].case == true)
+                $('.ans').eq(j).addClass("green").text("your answer is true")
+              else if (checkbox[i].case == false && checkbox[i].cntwrong == 1)
+                $(".ans").eq(j).addClass("red").text("your answer (" + checkbox[i].response1 +
+                  ") is wrong and the correct answer is (" +
+                  checkbox[i].truecheck1 + ") and your answer (" + checkbox[i].trueanswer1 + ") is true")
+              else if (checkbox[i].case == false && checkbox[i].cntwrong == 2)
+                $(".ans").eq(j).addClass("red").text("your answer (" + checkbox[i].response1 +
+                  ") is wrong and the correct answer is (" +
+                  checkbox[i].truecheck1 + ") and your answer (" + checkbox[i].response2 +
+                  ") and the correct answer is (" + checkbox[i].truecheck2 + ")")
+              else
+                $('.ans').eq(j).addClass("gray").text("no answer here and the answer is (" + checkbox[i].response1 +
+                  ") and (" + checkbox[i].response2 + ")")
+              j++;
+            }
+
+
+
+
+          };
+          await request();
+        }
+      });
+      e.preventDefault();
+    });
+  }
+  $(document).ready(async function () {
+
+    await updateF();
+
+  });
+  $(function () {
+    $("#confirm").on("click", function () {
+      $("#confirm").hide();
+    });
+  });
+</script>
+
+<body class="img" style="background-image: url(../images/pexels-tirachard-kumtanom-733856.jpg);">
+  <style>
+    .green {
+      background: #a9eb5db3;
+      color: white;
+      font-size: 20px;
+      padding: 1px 10px;
+    }
+
+    .red {
+      background: #ff41418c;
+      color: white;
+      font-size: 20px;
+      padding: 1px 10px;
+    }
+
+    .gray {
+      background: #607d8b;
+      color: white;
+      font-size: 20px;
+      padding: 1px 10px;
+    }
+  </style>
+  <section class="ftco-section">
+    <div class="container">
+
+
+
+
+      <form action="/test1" method="post" id="test1">
+
+
+
+        <p class="title_ques">Choose the correct answer:</p>
+        <p class="ques">1- My mother has a baby girl. she is her ..... </p>
+        <ul>
+          <li>
+            <input type="radio" name="1" id="fA" value="son">
+            <label for="fA">son</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="1" id="fB" value="sister">
+            <label for="fB">sister</label>
+            <div class="check"></div>
+          </li>
+
+
+          <li>
+            <input type="radio" name="1" id="fC" value="daughter">
+            <label for="fC">daughter</label>
+            <div class="check">
+              <div class="inside"></div>
+            </div>
+          </li>
+        </ul>
+
+        <div class="ans"></div>
+
+        <p class="ques"> 2- She can ..... very well</p>
+        <ul>
+          <li>
+            <input type="radio" name="2" id="sA" value="cooks">
+            <label for="sA">cooks</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="2" id="sB" value="cooked">
+            <label for="sB">cooked</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="2" id="sC" value="cook">
+            <label for="sC">cook</label>
+            <div class="check">
+              <div class="inside"></div>
+            </div>
+          </li>
+        </ul>
+        <div class="ans"></div>
+
+        <p class="ques"> 3- We ...... American</p>
+        <ul>
+          <li>
+            <input type="radio" name="3" id="thA" value="not">
+            <label for="thA">not</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="3" id="thB" value="aren't">
+            <label for="thB">aren't</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="3" id="thC" value="isn't">
+            <label for="thC">isn't</label>
+            <div class="check">
+              <div class="inside"></div>
+            </div>
+          </li>
+        </ul>
+        <div class="ans"></div>
+
+        <p class="ques"> 4- This is the house ..... I wanted </p>
+        <ul>
+          <li>
+            <input type="radio" name="4" id="FoA" value="whome">
+            <label for="FoA">whome</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="4" id="FoB" value="which">
+            <label for="FoB">which</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="4" id="FoC" value="who">
+            <label for="FoC">who</label>
+            <div class="check">
+              <div class="inside"></div>
+            </div>
+          </li>
+        </ul>
+        <div class="ans"></div>
+
+        <p class="ques">5- My sister's daughter is my ......</p>
+        <ul>
+          <li>
+            <input type="radio" name="5" id="oA" value="nephew">
+            <label for="oA">nephew</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="5" id="oB" value="niece">
+            <label for="oB">niece</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="5" id="oC" value="cousin">
+            <label for="oC">cousin</label>
+            <div class="check">
+              <div class="inside"></div>
+            </div>
+          </li>
+        </ul>
+        <div class="ans"></div>
+        <p class="ques">6- She has already ....... me </p>
+        <ul>
+          <li>
+            <input type="radio" name="6" id="pA" value="said">
+            <label for="pA">said</label>
+            <div class="check"></div>
+          </li>
+
+          <li>
+            <input type="radio" name="6" id="pB" value="talled">
+            <label for="pB">talled</label>
+            <div class="check"></div>
+          </li>
+
+          <li>
+            <input type="radio" name="6" id="pC" value="told">
+            <label for="pC">told</label>
+            <div class="check">
+              <div class="inside"></div>
+            </div>
+          </li>
+        </ul>
+        <div class="ans"></div>
+        <p class="ques">7- I have never ...... in Dubai </p>
+        <ul>
+          <li>
+            <input type="radio" name="7" id="rA" value="went">
+            <label for="rA">went</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="7" id="rB" value="been">
+            <label for="rB">been</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="7" id="rC" value="visit">
+            <label for="rC">visit</label>
+            <div class="check">
+              <div class="inside"></div>
+            </div>
+          </li>
+        </ul>
+        <div class="ans"></div>
+        <p class="ques">8- This information ....... great </p>
+        <ul>
+          <li>
+            <input type="radio" name="8" id="eA" value="is">
+            <label for="eA">is</label>
+            <div class="check"></div>
+          </li>
+          <li>
+            <input type="radio" name="8" id="eB" value="are">
+            <label for="eB">are</label>
+            <div class="check">
+              <div class="inside"></div>
+            </div>
+          </li>
+        </ul>
+        <div class="ans"></div>
+
+        <!--  -->
+
+        <p class="title_ques">(there are two correct answer ) :
+        <p class="ques">I will wear a .....</p>
+        </p>
+
+        <div class="item">
+          <div class="checkbox-rect2">
+            <input type="checkbox" name="check1[]" id="s" value="shirt">
+            <label class="book " for="s">shirt</label>
+          </div>
+        </div>
+        <div class="item">
+          <div class="checkbox-rect2">
+            <input type="checkbox" name="check1[]" id="c" value="cup">
+            <label class="book " for="c">cup</label>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="checkbox-rect2">
+            <input type="checkbox" name="check1[]" id="h" value="book">
+            <label class="book " for="h">book</label>
+          </div>
+        </div>
+        <div class="item">
+          <div class="checkbox-rect2">
+            <input type="checkbox" name="check1[]" id="j" value="cap">
+            <label class="book " for="j">cap</label>
+          </div>
+        </div>
+        <br>
+        <div class="ans"></div>
+        <p class="ques">I will write with ..... </p>
+        </p>
+        <div class="item">
+          <div class="checkbox-rect2">
+            <input type="checkbox" name="check2[]" id="n" value="a pen">
+            <label class="book " for="n">a pen</label>
+          </div>
+        </div>
+        <div class="item">
+          <div class="checkbox-rect2">
+            <input type="checkbox" name="check2[]" id="m" value="an eraser">
+            <label class="book " for="m">an eraser</label>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="checkbox-rect2">
+            <input type="checkbox" name="check2[]" id="p" value="a pencil">
+            <label class="book " for="p">a pencil</label>
+          </div>
+        </div>
+        <div class="item">
+          <div class="checkbox-rect2">
+            <input type="checkbox" name="check2[]" id="o" value="a bag">
+            <label class="book " for="o">a bag</label>
+          </div>
+        </div>
+        <br>
+        <div class="ans"></div>
+
+        <br>
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="form-group">
+              <input type="submit" class="form-control btn btn-primary submit px-3 " value="confirm" id="confirm">
+            </div>
+            <div class="form-group">
+              <div id="test"></div>
+            </div>
+            <div class="form-group">
+              <button class="form-control btn btn-primary submit px-3"><a href="/English"
+                  style="color: white;">Continu</a></button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <h1 class="logo"> <span>D</span>aisy</h1>
+      <p>If you have any issue feel free to drop us a line </p>
+      <p>Find us on </p>
+      <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+          <div class="form-group">
+            <button type="submit" class="form-control btn btn-primary submit px-3"
+              onclick="window.location='/about'">About
+              Us</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">© 2023 <span>Daisy</span>All Right Reserved</div>
+    </div>
+
+  </footer>
+</body>
+
+</html>

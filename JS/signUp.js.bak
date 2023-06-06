@@ -1,0 +1,356 @@
+const { time, count } = require("console");
+const { response } = require("express");
+const { write, link } = require("fs");
+var moment = require("moment");
+const English = require("./English");
+let selected_level1, selected_subject1;
+module.exports = {
+  register: function (l, s) {
+    selected_level1 = l;
+    selected_subject1 = s;
+  },
+  signUp: function (app, dic) {
+    app.get("/signUp", function (req, res) {
+      res.sendFile(dic + "/HTML/signUp.html");
+    });
+    const axios = require("axios");
+    var confirm = "";
+    var email;
+    var tel;
+    var name;
+    var error;
+    var selected_subject;
+    var obj1;
+    var obj2;
+    var selected_level;
+    var selected_book;
+    var price;
+    var created = moment().format("YYYY-MM-DD");
+    var test1;
+    let timeR;
+    var book;
+    var flag, Cemail, Cregiste, Cinput;
+    var ID;
+    var count;
+    var BookId;
+    var MongoClient = require("mongodb").MongoClient;
+    var url = "mongodb://0.0.0.0:27017/languages";
+
+    let accept_email = ["hotmail", "gmail"];
+    app.post("/signUp", async function (req, res) {
+      MongoClient.connect(url, async function (err, db) {
+        obj1 = "";
+        var dbo = db.db("languages");
+
+        test1 = "";
+        (flag = false), (Cemail = false), (Cregiste = true), (Cinput = true);
+        selected_subject = selected_subject1;
+        if (selected_subject == "English") {
+          selected_level = selected_level1;
+        }
+
+        book = "";
+
+        if (selected_subject == "English") {
+          if (req.body.book) {
+            book = "You want the book and its price 8000";
+            flag = true;
+          }
+        } else {
+          if (req.body.book) {
+            book = "You want the book and its price 12000";
+            flag = true;
+          }
+        }
+        error = "";
+        confirm = "";
+
+        email = req.body.email;
+
+        tel = req.body.tel;
+        name = req.body.name;
+        if (email == "" && tel == "") {
+          confirm = "You must at least enter your number or email";
+          Cinput = false;
+        }
+        var newObj;
+
+        if (selected_subject == "English") {
+          obj1 = {
+            name: name,
+            email: email,
+            tel: tel,
+            selected_level: selected_level,
+            selected_subject: selected_subject,
+            created: created,
+            flag: flag,
+          };
+        } else {
+          selected_level = "";
+          obj1 = {
+            name: name,
+            email: email,
+            tel: tel,
+            selected_level: selected_level,
+            selected_subject: selected_subject,
+            created: created,
+            flag: flag,
+          };
+        }
+
+        if (obj1.selected_level != "") {
+          if (tel == "") {
+            newObj = {
+              selected_level: obj1.selected_level,
+
+              email: obj1.email,
+
+              selected_subject: obj1.selected_subject,
+            };
+          } else if (email == "") {
+            newObj = {
+              selected_level: obj1.selected_level,
+              tel: obj1.tel,
+              selected_subject: obj1.selected_subject,
+            };
+          } else {
+            newObj = {
+              selected_level: obj1.selected_level,
+
+              email: obj1.email,
+              tel: obj1.tel,
+              selected_subject: obj1.selected_subject,
+            };
+          }
+        } else {
+          if (tel == "") {
+            newObj = {
+              email: obj1.email,
+
+              selected_subject: obj1.selected_subject,
+            };
+          } else if (email == "") {
+            newObj = {
+              tel: obj1.tel,
+              selected_subject: obj1.selected_subject,
+            };
+          } else {
+            newObj = {
+              email: obj1.email,
+              tel: obj1.tel,
+              selected_subject: obj1.selected_subject,
+            };
+          }
+        }
+        let emaill = email.toLowerCase();
+        if (email != "") {
+          for (let i = 0; i < accept_email.length; i++)
+            if (emaill.search("@" + accept_email[i] + ".com") != -1) {
+              Cemail = true;
+              break;
+            }
+        }
+        if (Cemail == false && email != "") {
+          test1 = "not accept email";
+        }
+
+        var test;
+        test = await dbo.collection("students").find(newObj).toArray();
+        if (test[0] != null) {
+          error = "You are already registered";
+          timeR = test[0].created;
+          Cregiste = false;
+        }
+        if (
+          Cemail == true &&
+          Cinput == true &&
+          Cregiste == true &&
+          test1 == ""
+        ) {
+          await dbo
+            .collection("counters")
+            .updateOne({ I: 1 }, { $inc: { count: 1 } });
+        }
+
+        db.close();
+
+        res.send();
+      });
+    });
+
+    app.get("/registe", async (req, res) => {
+      MongoClient.connect(url, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("languages");
+        count = await dbo.collection("counters").find({ I: 1 }).toArray();
+        ID = await count[0].count;
+        obj1.student_id = ID;
+
+        let oldRegist = [];
+        if (flag == true) {
+          let n, m, l;
+          let updatebooks = [];
+          let updateprice = 0;
+          let updatetotalPrice = 0;
+
+          if (selected_subject == "English") {
+            selected_book = selected_level1;
+            price = 8000;
+          } else {
+            selected_book = selected_subject1;
+            price = 12000;
+          }
+
+          if (email != "" && tel == "") {
+            oldRegist = await dbo
+              .collection("Book")
+              .find({ email: email, name: name })
+              .toArray();
+            n = true;
+          }
+          if (email == "" && tel != "") {
+            oldRegist = await dbo
+              .collection("Book")
+              .find({ tel: tel, name: name })
+              .toArray();
+            m = true;
+          }
+          if (email != "" && tel != "") {
+            oldRegist = await dbo
+              .collection("Book")
+              .find({ tel: tel, email: email, name: name })
+              .toArray();
+            l = true;
+          }
+          if (oldRegist != "") {
+            var s = oldRegist[0].books;
+            var p = oldRegist[0].price;
+            updatebooks = s.concat(selected_book);
+            updateprice = p.concat(price);
+            price += oldRegist[0].totalPrice;
+            updatetotalPrice = price;
+            if (n == true) {
+              dbo.collection("Book").updateOne(
+                { name: name, email: email },
+                {
+                  $set: {
+                    books: updatebooks,
+                    price: updateprice,
+                    totalPrice: updatetotalPrice,
+                  },
+                }
+              );
+            } else if (m == true) {
+              dbo.collection("Book").updateOne(
+                { name: name, tel: tel },
+                {
+                  $set: {
+                    books: updatebooks,
+                    price: updateprice,
+                    totalPrice: updatetotalPrice,
+                  },
+                }
+              );
+            } else if (l == true) {
+              dbo.collection("Book").updateOne(
+                { name: name, tel: tel, email: email },
+                {
+                  $set: {
+                    books: updatebooks,
+                    price: updateprice,
+                    totalPrice: updatetotalPrice,
+                  },
+                }
+              );
+            }
+          } else {
+            obj2 = {
+              name: name,
+              tel: tel,
+              email: email,
+              books: [selected_book],
+              price: [price],
+              totalPrice: price,
+              book_id: BookId,
+            };
+            await dbo.collection("Book").insertOne(obj2, function (err, res) {
+              if (err) throw err;
+              console.log("add new book in signUp ");
+              db.close();
+            });
+          }
+          count = await dbo.collection("counters").find({ I: 2 }).toArray();
+          BookId = await count[0].count;
+          obj1.book_id = BookId;
+        }
+
+        await dbo.collection("students").insertOne(obj1, function (err, res) {
+          if (err) throw err;
+          console.log("add new student ");
+        });
+      });
+      res.sendFile(dic + "/HTML/registe.html");
+    });
+
+    let resSign;
+    app.get("/confirm", (req, res) => {
+      let oldRegist = [];
+      MongoClient.connect(url, async function (err, db) {
+        var dbo = db.db("languages");
+        dbo.collection("counters").updateOne({ I: 1 }, { $inc: { count: 1 } });
+        count = await dbo.collection("counters").find({ I: 1 }).toArray();
+        ID = await count[0].count;
+        if (flag == true) {
+          if (email != "" && tel == "") {
+            oldRegist = await dbo
+              .collection("Book")
+              .find({ email: email, name: name })
+              .toArray();
+            n = true;
+          }
+          if (email == "" && tel != "") {
+            oldRegist = await dbo
+              .collection("Book")
+              .find({ tel: tel, name: name })
+              .toArray();
+            m = true;
+          }
+          if (email != "" && tel != "") {
+            oldRegist = await dbo
+              .collection("Book")
+              .find({ tel: tel, email: email, name: name })
+              .toArray();
+            l = true;
+          }
+          if (oldRegist != "") {
+            BookId = oldRegist[0].book_id;
+          } else {
+            dbo
+              .collection("counters")
+              .updateOne({ I: 2 }, { $inc: { count: 1 } });
+            count = await dbo.collection("counters").find({ I: 2 }).toArray();
+            BookId = await count[0].count;
+            console.log(BookId);
+          }
+        }
+        let timen = created;
+        resSign = {
+          name: name,
+          email: email,
+          tel: tel,
+          confirm: confirm,
+          timen: timen,
+          error: error,
+          test1: test1,
+          timeR: timeR,
+          book: book,
+          ID: ID,
+          BookId: BookId,
+          obj1: obj1,
+        };
+        res.json(resSign);
+        db.close();
+      });
+    });
+  },
+};

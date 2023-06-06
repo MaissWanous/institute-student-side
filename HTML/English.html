@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/secodCheck.css" />
+
+  <title>English</title>
+</head>
+<script>
+  async function updateF() {
+    window.addEventListener("pageshow", function (event) {
+      var historyTraversal = event.persisted ||
+        (typeof window.performance != "undefined" &&
+          window.performance.navigation.type === 2);
+      if (historyTraversal) {
+        // Handle page restore.
+        window.location.reload();
+      }
+    });
+    $(document).on("submit", "#form3", function (e) {
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize(),
+        success: async function (html) {
+          let request = async () => {
+            const response = await fetch("http://localhost:8080/link2");
+
+            const data = await response.json();
+            const selected_level = data.selected_level;
+            if (selected_level != "") {
+              window.location = "/signUp";
+            }
+            else {
+              $("#res").html(
+                " <div class='info-sign'> You must choose a level</div>"
+              );
+            }
+          };
+          await request();
+        },
+      });
+      e.preventDefault();
+    });
+  }
+  $(document).ready(async function () {
+    await updateF();
+  });
+</script>
+
+<body class="img" style="background-image: url(../images/pexels-tirachard-kumtanom-733854.jpg)">
+  <section class="ftco-section">
+    <div class="container">
+      <form action="/En" name="level" method="post" id="form3">
+        <div id="frm_field_941_container" class="frm_form_field frm_section_heading form-field">
+          <div id="frm_field_931_container" class="frm_form_field form-field frm_top_container frm_half vertical_radio">
+            <div class="frm_opt_container" aria-labelledby="field_gxtn9_label" role="group">
+              <div class="frm_radio" id="frm_radio_928-941-1">
+                <label for="Beginner">
+                  <input type="radio" name="level" id="Beginner" value="Beginner" data-sectionid="941"
+                    data-invmsg="Radio Buttons is invalid" aria-invalid="false" /><span></span> Beginner</label>
+              </div>
+              <div class="info">
+                <p>Course price : 22</p>
+                <p>Duration of course :2 month</p>
+                <p>Book price: 22</p>
+              </div>
+
+              <div class="frm_radio" id="frm_radio_928-941-1">
+                <label for="Intermediate">
+                  <input type="radio" name="level" value="Intermediate" id="Intermediate" data-sectionid="941"
+                    data-invmsg="Radio Buttons is invalid" aria-invalid="false" /><span></span>Intermediate</label>
+              </div>
+              <div class="info">
+                <p>Course price : 22</p>
+                <p>Duration of course :2 month</p>
+                <p>Book price: 22</p>
+              </div>
+              <div class="frm_radio" id="frm_radio_928-941-1">
+                <label for="Advanced">
+                  <input type="radio" name="level" value="Advanced" id="Advanced" data-sectionid="941"
+                    data-invmsg="Radio Buttons is invalid" aria-invalid="false" /><span></span>Advanced</label>
+              </div>
+              <div class="info">
+                <p>Course price : 22</p>
+                <p>Duration of course :2 month</p>
+                <p>Book price: 22</p>
+              </div>
+              <br />
+              <p class="TOFEL">TOEFL :</p>
+              <br />
+              <div class="frm_radio" id="frm_radio_928-941-1">
+                <label for="ibt1">
+                  <input type="radio" name="level" value="ibt1" id="ibt1" data-sectionid="941"
+                    data-invmsg="Radio Buttons is invalid" aria-invalid="false" /><span></span>IBT 1</label>
+              </div>
+
+              <div class="info">
+                <p>Course price : 22</p>
+                <p>Duration of course :2 month</p>
+                <p>Book price: 22</p>
+              </div>
+              <div class="frm_radio" id="frm_radio_928-941-1">
+                <label for="ibt2">
+                  <input type="radio" name="level" value="ibt2" id="ibt2" data-sectionid="941"
+                    data-invmsg="Radio Buttons is invalid" aria-invalid="false" /><span></span>IBT 2</label>
+              </div>
+
+              <div class="info">
+                <p>Course price : 22</p>
+                <p>Duration of course :2 month</p>
+                <p>Book price: 22</p>
+              </div>
+              <div class="frm_radio" id="frm_radio_928-941-1">
+                <label for="pbt1">
+                  <input type="radio" name="level" value="pbt1" id="pbt1" data-sectionid="941"
+                    data-invmsg="Radio Buttons is invalid" aria-invalid="false" /><span></span>PBT 1</label>
+              </div>
+
+              <div class="info">
+                <p>Course price : 22</p>
+                <p>Duration of course :2 month</p>
+                <p>Book price: 22</p>
+              </div>
+              <div class="frm_radio" id="frm_radio_928-941-1">
+                <label for="pbt2">
+                  <input type="radio" name="level" value="pbt2" id="pbt2" data-sectionid="941"
+                    data-invmsg="Radio Buttons is invalid" aria-invalid="false" /><span></span>PBT 2</label>
+              </div>
+              <div class="info">
+                <p>Course price : 22</p>
+                <p>Duration of course :2 month</p>
+                <p>Book price: 22</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="res"></div>
+        <br />
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="form-group">
+              <input type="submit" class="form-control btn btn-primary submit px-3 " value="Continue" id="confirm" />
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+          <div class="form-group">
+            <button class="form-control btn btn-primary submit px-3" onclick="window.location='/test'">
+              Test
+            </button>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="form-control btn btn-primary submit px-3" onclick="window.location='/'">
+              Go Back
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+<footer>
+  <div class="container">
+    <h1 class="logo"> <span>D</span>aisy</h1>
+    <p>If you have any issue feel free to drop us a line </p>
+    <p>Find us on </p>
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-5">
+        <div class="form-group">
+          <button type="submit" class="form-control btn btn-primary submit px-3"
+            onclick="window.location='/about'">About
+            Us</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright">© 2023 <span>Daisy</span>All Right Reserved</div>
+  </div>
+
+</footer>
+
+</html>

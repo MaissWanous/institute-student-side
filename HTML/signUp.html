@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../css/checkBox.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Sign Up</title>
+</head>
+<script>
+  async function welcome() {
+    window.addEventListener("pageshow", function (event) {
+      var historyTraversal = event.persisted ||
+        (typeof window.performance != "undefined" &&
+          window.performance.navigation.type === 2);
+      if (historyTraversal) {
+        // Handle page restore.
+        window.location.reload();
+      }
+    });
+    const response = await fetch("http://localhost:8080/link1");
+    const response1 = await fetch("http://localhost:8080/link2");
+    const data = await response.json();
+    const data1 = await response1.json();
+    const selectedSubject = data.selected_subject;
+    const selectedLevel = data1.selected_level;
+    console.log(selectedSubject);
+    if (selectedSubject == "English") {
+      document.getElementById("div").innerHTML =
+        "Welcome to register in English     " + selectedLevel + " level course";
+    } else {
+      document.getElementById("div").innerHTML =
+        "Welcome to register in " + selectedSubject + " course";
+    }
+  }
+  async function updateF() {
+    window.addEventListener("pageshow", function (event) {
+      var historyTraversal = event.persisted ||
+        (typeof window.performance != "undefined" &&
+          window.performance.navigation.type === 2);
+      if (historyTraversal) {
+        // Handle page restore.
+        window.location.reload();
+      }
+    });
+    $(document).on("submit", "#form2", function (e) {
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize(),
+        success: async function (html) {
+          let request = async () => {
+            const response = await fetch("http://localhost:8080/link1");
+            const response1 = await fetch("http://localhost:8080/link2");
+            const response2 = await fetch("http://localhost:8080/confirm");
+            const data = await response.json();
+            const data1 = await response1.json();
+            const data2 = await response2.json();
+            if (data2.snaps == false) {
+              const selectedSubject = data.selected_subject;
+              const selectedLevel = data1.selected_level;
+              if (data2.book != "" && data2.test1 == "" && data2.error == "") {
+                document.getElementById("book").innerHTML = data2.book;
+              }
+              if (data2.test1 != "") {
+                document.getElementById("response").innerHTML = data2.test1;
+              } else if (data2.error != "") {
+                {
+                  document.getElementById("response").innerHTML =
+                    data2.error + " in " + data2.timeR;
+                  $("#edit").show();
+                  $("#delete").show();
+                }
+              } else {
+                let text = " <div class='info-sign'>Your Informaton</div>" +
+                  "<span class='sign-span'>Name :</span>" + data2.name +
+                  "<br>" + "<span class='sign-span'>Email :</span>" +
+                  data2.email +
+                  "<br>" + "<span class='sign-span'>Phone number :</span>" +
+                  data2.tel +
+                  "<br>" + "<span class='sign-span'>Registeration time :</span>" +
+                  data2.timen +
+                  "<br> " + "<span class='sign-span'>Your registration number :</span>" +
+                  data2.ID
+                if (data2.obj1.flag == true)
+                  text += "<br> " + "<span class='sign-span'>Your Book ID :</span>" +
+                    data2.BookId;
+                document.getElementById("response").innerHTML =
+                  text
+                  ;
+                $(".conf").show();
+                $("#code").show();
+                $("#sub").addClass("opac");
+              }
+            }
+            else if (data2.snaps == true) {
+              document.getElementById("response").innerHTML = " <div class='info-sign'>" + "something went wrong, try to update and submit the form again" + "</div>"
+            }
+          };
+          await request();
+        },
+      });
+      e.preventDefault();
+    });
+  }
+
+  FIXME: $(document).on("submit", "#form2", function (e) {
+    $.ajax({
+      url: $(this).attr("action"),
+      type: $(this).attr("method"),
+      data: $(this).serialize(),
+      success: async function (html) {
+        let request = async () => {
+          const response2 = await fetch("http://localhost:8080/ConfirmationCode");
+          const data2 = await response2.json();
+          consol.log(data2.wrong)
+          if (data2.check == true) {
+            console.log("hiiii");
+            // Code is valid, redirect to another page
+            window.location.href = '/registe.html';
+          } else {
+            console.log("elsee");
+            // Code is invalid, show error message
+            $('#Wrong').text('Invalid code!');
+          }
+        };
+        await request();
+      },
+    });
+    e.preventDefault();
+  });
+
+  // TODO: $(document).on("submit", "#CodeConf", function (e) {
+  //   e.preventDefault();
+
+  //   $.ajax({
+  //     url: $(this).attr("action"),
+  //     type: $(this).attr("method"),
+  //     data: $(this).serialize(),
+  //     // success: async function (html) {
+  //     success: async function (data) {
+  //       let request = async () => {
+  //         const response2 = await fetch("http://localhost:8080/ConfirmationCode");
+  //         const data2 = await response2.json();
+
+  //         if (data2.check == true) {
+  //           console.log("hiiii");
+  //           // Code is valid, redirect to another page
+  //           window.location.href = '/registe.html';
+  //         } else {
+  //           console.log("elsee");
+  //           // Code is invalid, show error message
+  //           $('#Wrong').text('Invalid code!');
+  //         }
+  //       }
+  //     }
+  //     ,
+  //     error: function (xhr, ajaxOptions, thrownError) {
+  //       console.log(xhr.status);
+  //       console.log(thrownError);
+  //     }
+  //   });
+  // });
+
+
+  $(document).ready(async function () {
+    $(".conf").hide();
+    $("#code").hide();
+    $("#edit").hide();
+    $("#delete").hide();
+    await updateF();
+    await welcome();
+  });
+  $(function () {
+    $("#btn").on("click", function () {
+      $("#edit").show();
+      $("#delete").show();
+
+    });
+  });
+
+  $(function () {
+    $("#edit").on("click", function () {
+      window.location = "/edit";
+    });
+  });
+  $(function () {
+    $("#delete").on("click", function () {
+      window.location = "/delete1";
+    });
+  });
+
+</script>
+
+<body class="img" style="background-image: url(../images/photo_٢٠٢٢-١٢-١٧_٢١-٥١-١٤.jpg);">
+  <style>
+    .opac {
+      opacity: 0.6;
+    }
+  </style>
+  <section class="ftco-section">
+    <div class="container">
+      <form action="signUp" method="post" id="form2">
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <h2 class="heading-section" id="div"></h2>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="login-wrap">
+              <div class="form-group mb-3">
+                <label class="label" for="name">Full Name</label>
+                <input type="text" class="form-control" name="name" id="user"
+                  oninput="this.value=this.value.replace(/[^A-Za-z\s]/g,'');" placeholder="Enter your name" required />
+                <span class="icon fa fa-user-o"></span>
+              </div>
+              <div class="form-group mb-3">
+                <label class="label" for="email">Phone number </label>
+                <input type="tel" name="tel" class="form-control" id="" type="text"
+                  oninput="this.value = this.value.replace(/[^0-9.]/g,'').replace(/(\..*?)\..*/g, '$1');"
+                  placeholder="your number" pattern="[0-9]{10}" />
+                <span class="icon fa fa-phone"></span>
+              </div>
+              <div class="form-group mb-3">
+                <label class="label" for="email">Email Address</label>
+                <input type="email" class="form-control" name="email" id="" placeholder="your email" required />
+                <span class="icon fa fa-envelope-o"></span>
+              </div>
+              <div class="item">
+                <div class="checkbox-rect2">
+                  <input type="checkbox" id="checkbox-rect2" name="book">
+                  <label for="checkbox-rect2" class="book ">Do you want to buy a book? </label>
+                </div>
+              </div>
+
+              <br>
+              <div id="response">
+
+              </div>
+
+              <div id="book"></div>
+
+              <div id="sub" class="form-group">
+                <input type="submit" id="btn" value="Submit" class="form-control btn btn-primary submit px-3" />
+              </div>
+      </form>
+
+    </div>
+    </div>
+    </div>
+
+    <br>
+
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-5">
+        <div class="login-wrap">
+
+          <form action="/registe" method="post" id="CodeConf">
+            <div class="form-group mb-3" id="code">
+              <label class="label" for="">Veification Code</label>
+              <input type="text" name="code" class="form-control"
+                oninput="this.value = this.value.replace(/[^0-9.]/g,'').replace(/(\..*?)\..*/g, '$1');" id=""
+                placeholder="Veification Code" required />
+              <span class="icon fa fa-lock"></span>
+            </div>
+            <div class="form-group conf">
+              <label class="label" for=""> To confirm your registration click her </label>
+              <button class=" form-control btn btn-primary submit px-3 confirm" type="submit" id="btn">confirm</button>
+            </div>
+            <div id="Wrong"></div>
+          </form>
+          <div class="form-group">
+
+            <button type="submit" class="form-control btn btn-primary submit px-3" id="edit">Edit Registeration
+              informaton</button>
+          </div>
+          <div class="form-group">
+
+            <button type="submit" class="form-control btn btn-primary submit px-3" id="delete">To delete your
+              registration</button>
+          </div>
+          <div class="form-group">
+
+            <button type="submit" class='form-control btn btn-primary submit px-3' onclick="window.location='/'">Go
+              Back</button>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <h1 class="logo"> <span>D</span>aisy</h1>
+      <p>If you have any issue feel free to drop us a line </p>
+      <p>Find us on </p>
+      <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+          <div class="form-group">
+            <button type="submit" class="form-control btn btn-primary submit px-3"
+              onclick="window.location='/about'">About
+              Us</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">© 2023 <span>Daisy</span>All Right Reserved</div>
+    </div>
+
+  </footer>
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/popper.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../JS/main.js"></script>
+</body>
+
+
+</html>

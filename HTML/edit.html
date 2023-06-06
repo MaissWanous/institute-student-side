@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../css/checkBox.css">
+
+  <link rel="stylesheet" href="../css/style.css">
+
+  <title>Edit</title>
+</head>
+<script>
+  async function updateF() {
+    $(document).on("submit", "#form2", function (e) {
+      $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        data: $(this).serialize(),
+        success: async function (html) {
+          let request = async () => {
+            const response = await fetch("http://localhost:8080/editN");
+
+            const data = await response.json();
+            if (data.result == "") {
+              if (data.snaps == false) {
+                if (data.result != "") {
+                  document.getElementById("response").innerHTML =
+                    " <div class='info-sign'>Your old Informaton</div>" + data.result + "</div>"
+                }
+
+                else {
+                  var oldName, oldTel, oldEmial, oldSelectedSubject, oldSelectedLevel;
+                  if (data.new_information.name == "") {
+                    oldName = data.old_information.name;
+                  }
+                  else {
+                    oldName = data.new_information.name;
+                  }
+                  if (data.new_information.tel == "") {
+                    oldTel = data.old_information.tel;
+                  }
+                  else {
+                    oldTel = data.new_information.tel
+                  }
+                  if (data.new_information.email == "") {
+                    oldEmial = data.old_information.email;
+                  }
+                  else {
+                    oldEmial = data.new_information.email;
+                  }
+                  if (data.new_information.selected_subject == "") {
+                    oldSelectedSubject = data.old_information.selected_subject;
+                  }
+                  else {
+                    oldSelectedSubject = data.new_information.selected_subject
+                  }
+                  if (data.new_information.selected_level == "" && data.new_information.selected_subject != "Kids") {
+                    oldSelectedLevel = data.old_information.selected_level;
+                  }
+                  else {
+                    oldSelectedLevel = data.new_information.selected_level;
+                  }
+
+
+                  $(".sub").addClass("opac");
+                  $(".conf").show();
+                  document.getElementById("response").innerHTML =
+
+                    " <div class='info-sign'>Your old Informaton</div>" +
+                    "<span class='sign-span'>Name :</span>" +
+                    data.old_information.name +
+                    "<br>" + "<span class='sign-span'>Phone number :</span>" +
+                    data.old_information.tel +
+                    "<br>" + "<span class='sign-span'>Email :</span>" +
+                    data.old_information.email + "<br>" + "<span class='sign-span'>Subject :</span>"
+                    + data.old_information.selected_subject +
+                    " " + data.old_information.selected_level +
+                    "<br>" + " <div class='info-sign'>You have modified</div>" +
+                    "<span class='sign-span'>Name :</span>" +
+                    oldName +
+                    "<br>" + "<span class='sign-span'>Phone number :</span>" +
+                    oldTel +
+                    "<br>" + "<span class='sign-span'>Email :</span>" +
+                    oldEmial + "<br>" + "<span class='sign-span'>Subject :</span>" +
+                    oldSelectedSubject +
+                    " " + oldSelectedLevel
+                  document.getElementById("book").innerHTML = data.old_information.flag;
+                }
+              }
+              else if (data.snaps == true) {
+                document.getElementById("response").innerHTML = " <div class='info-sign'>" + "something went wrong, try to update and submit the form again" + "</div>"
+              }
+            }
+            else if (data.resul != "") {
+              alert("Sorry , but this number does not exist");
+            }
+          }
+          await request();
+        },
+      });
+      e.preventDefault();
+    });
+  }
+  $(function () {
+    $("#forget").on("click", function () {
+      window.location = "/forget";
+    });
+  });
+  $(document).ready(async function () {
+    $(".conf").hide();
+    await updateF();
+  });
+</script>
+<style>
+  .opac {
+    opacity: 0.6;
+  }
+</style>
+
+<body class="img" style="background-image: url(../images/pexels-markus-spiske-97987.jpg);">
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center mb-5">
+          <h2 class="heading-section">To modify your information ,
+            please enter the registration number and fill in only the fields that you want to modify </h2>
+        </div>
+      </div>
+      <form action="/editInfo" method="post" id="form2">
+
+        <div class="row justify-content-center">
+          <div class="col-md-6 text-center mb-5">
+            <div class="form-group mb-3">
+              <div class="info-sign" for="password">Registration number</div>
+              <input type="text" name="id" class="form-control" id="name" placeholder="Registration number" />
+              <span class="icon fa fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="login-wrap">
+              <div class="form-group mb-3">
+                <label class="label" for="name">Full Name</label>
+                <input type="text" name="name" class="form-control" id="" placeholder="Enter your name" />
+                <span class="icon fa fa-user-o"></span>
+              </div>
+              <div class="form-group mb-3">
+                <label class="label" for="email">Phone number</label>
+                <input type="tel" name="tel" class="form-control" id="" placeholder="your number" pattern="[0-9]{10}" />
+                <span class="icon fa fa-phone"></span>
+              </div>
+              <div class="form-group mb-3">
+                <label class="label" for="email">Email Address</label>
+                <input type="email" name="email" class="form-control" id="" placeholder="Your email" />
+                <span class="icon fa fa-envelope-o"></span>
+              </div>
+
+
+              <label for="subject" class="book ">Select the subject </label>
+              <select name="subject" id="subject" class="form-control selectpicker">
+                <option value=""></option>
+                <option value="German"> German</option>
+                <option value="Frensh"> Frensh</option>
+                <option value="Russian"> Russian</option>
+                <optgroup>
+                  <option value="Kids"> English for kids</option>
+                  <option value="Beginner"> Beginner level English</option>
+                  <option value="Intermediate"> Beginner level English</option>
+                  <option value="Advanced"> Advanced level English</option>
+                  <option value="ibt1"> IBT1 level English</option>
+                  <option value="ibt2"> IBT2 level English</option>
+                  <option value="pbt1"> PBT1 level English</option>
+                  <option value="pbt2"> PBT2 level English</option>
+                </optgroup>
+
+              </select>
+              <br />
+
+              <div class="form-group sub">
+                <input type="submit" class="form-control btn btn-primary submit px-3" value="Submit" />
+              </div>
+
+              <div id="response"></div>
+              <div id="book"></div>
+
+      </form>
+
+
+    </div>
+    </div>
+    </div>
+    <br>
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-5">
+        <div class="login-wrap">
+          <div class="form-group mb-3">
+            <form action="/editC" method="post">
+              <div class="form-group conf">
+                <label class="label" for="email"> To confirm your registration click her </label>
+                <button type="submit" class="form-control btn btn-primary submit px-3 confirm" id="btn">confirm</button>
+              </div>
+            </form>
+            <div class="form-group mb-3 forget">
+              <label class="label" for="email"> If you forget your registration number click here</label>
+              <button type="submit" class=" form-control btn btn-primary submit px-3" id="forget">Restor your
+                information
+              </button>
+            </div>
+
+            <div class="form_group">
+              <button type="submit" class="form-control btn btn-primary submit px-3" onclick="window.location='/'">Go
+                Back</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <h1 class="logo"> <span>D</span>aisy</h1>
+      <p>If you have any issue feel free to drop us a line </p>
+      <p>Find us on </p>
+      <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+          <div class="form-group">
+            <button type="submit" class="form-control btn btn-primary submit px-3"
+              onclick="window.location='/about'">About
+              Us</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="copyright">© 2023 <span>Daisy</span>All Right Reserved</div>
+    </div>
+
+  </footer>
+</body>
+
+</html>
