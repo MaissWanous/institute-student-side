@@ -110,66 +110,30 @@
       e.preventDefault();
     });
   }
-
-  FIXME: $(document).on("submit", "#form2", function (e) {
+  TODO: $(document).on("submit", "#CodeConf", function (e) {
     $.ajax({
       url: $(this).attr("action"),
       type: $(this).attr("method"),
       data: $(this).serialize(),
       success: async function (html) {
         let request = async () => {
-          const response2 = await fetch("http://localhost:8080/ConfirmationCode");
+          const response2 = await fetch("http://localhost:8080/confirm");
           const data2 = await response2.json();
-          consol.log(data2.wrong)
-          if (data2.check == true) {
-            console.log("hiiii");
-            // Code is valid, redirect to another page
-            window.location.href = '/registe.html';
-          } else {
-            console.log("elsee");
-            // Code is invalid, show error message
-            $('#Wrong').text('Invalid code!');
+          if (data2.wrong != "") {
+            document.getElementById("Wrong").innerHTML = "invalid code!";
+
           }
-        };
+
+
+
+        }
         await request();
-      },
-    });
+      }
+    })
     e.preventDefault();
+
+
   });
-
-  // TODO: $(document).on("submit", "#CodeConf", function (e) {
-  //   e.preventDefault();
-
-  //   $.ajax({
-  //     url: $(this).attr("action"),
-  //     type: $(this).attr("method"),
-  //     data: $(this).serialize(),
-  //     // success: async function (html) {
-  //     success: async function (data) {
-  //       let request = async () => {
-  //         const response2 = await fetch("http://localhost:8080/ConfirmationCode");
-  //         const data2 = await response2.json();
-
-  //         if (data2.check == true) {
-  //           console.log("hiiii");
-  //           // Code is valid, redirect to another page
-  //           window.location.href = '/registe.html';
-  //         } else {
-  //           console.log("elsee");
-  //           // Code is invalid, show error message
-  //           $('#Wrong').text('Invalid code!');
-  //         }
-  //       }
-  //     }
-  //     ,
-  //     error: function (xhr, ajaxOptions, thrownError) {
-  //       console.log(xhr.status);
-  //       console.log(thrownError);
-  //     }
-  //   });
-  // });
-
-
   $(document).ready(async function () {
     $(".conf").hide();
     $("#code").hide();

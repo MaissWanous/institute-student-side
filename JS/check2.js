@@ -6,15 +6,10 @@ module.exports = {
     var check;
     var code;
     var result = '';
-    const axios = require("axios");
     app.post("/check2", function (req, res) {
-      axios.get("http://localhost:8080/cheee").then(response => {
-
-        console.log(response.data);
-      });
-      code =
-        check = parseInt(req.body.code);
-
+      check = parseInt(req.body.code);
+      code = Math.floor(Math.random() * 1000000);
+      console.log(code);
       if (code == check)
         result = "Your registration is complete";
       else

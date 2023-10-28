@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <link rel="stylesheet" href="public/css/style.css" />
+    <link rel="stylesheet" href="public/css/start.css" />
+    <link rel="stylesheet" href="public/css/team.css" />
+    <title>subjects</title>
+  </head>
+  <script>
+    async function updateF() {
+      $(document).on("submit", "#form1", function (e) {
+        $.ajax({
+          url: $(this).attr("action"),
+          type: $(this).attr("method"),
+          data: $(this).serialize(),
+          success: async function (html) {
+            let request = async () => {
+              const response = await fetch("http://localhost:8080/link1");
+
+              const data = await response.json();
+              const selectedSubject = data.selected_subject;
+              if (selectedSubject == "English") window.location = "/English";
+              else if (selectedSubject == "Kids") window.location = "/kids";
+              else if (selectedSubject == "book") window.location = "/book";
+              else {
+                window.location = "/signUp";
+              }
+            };
+            await request();
+          },
+        });
+        e.preventDefault();
+      });
+    }
+    $(document).ready(async function () {
+      await updateF();
+    });
+  </script>
+
+  <body
+    class="img"
+    style="
+      background-image: url(public/images/pexels-tara-winstead-8850666.jpg);
+    "
+  >
+    <section class="ftco-section">
+      <div class="container">
+        <form action="/student" method="post" id="form1" class="form cf">
+          <section class="plan cf">
+            <input type="radio" name="subject" value="English" id="english" />
+            <label for="english" class="free-label four col">English</label>
+
+            <input type="radio" name="subject" value="Kids" id="kids" />
+            <label
+              for="kids"
+              class="free-label four col"
+              title="This course is only for those under the age of 12"
+              >Kids</label
+            >
+
+            <input type="radio" name="subject" value="German" id="german" />
+            <label for="german" class="free-label four col">German</label>
+
+            <input type="radio" name="subject" value="Frensh" id="frensh" />
+            <label for="frensh" class="free-label four col">Frensh</label>
+
+            <input type="radio" name="subject" value="Russian" id="russian" />
+            <label for="russian" class="free-label four col">Russian</label>
+
+            <input type="radio" name="subject" value="book" id="book" />
+            <label for="book" class="free-label four col">Books</label>
+          </section>
+          <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+              <div class="form-group">
+                <input
+                  type="submit"
+                  class="form-control btn btn-primary submit px-3"
+                  value="Confirm"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="form-group">
+              <button
+                type="submit"
+                class="form-control btn btn-primary submit px-3"
+                onclick="window.location='/delete1'"
+              >
+                To delete your registration
+              </button>
+            </div>
+            <div class="form-group">
+              <button
+                type="submit"
+                class="form-control btn btn-primary submit px-3"
+                onclick="window.location='/edit'"
+              >
+                Edit Registeration informaton
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- <footer>
+    <div class="container">
+      <h1>logo</h1>
+      <p>If you have any issue </p>
+      <p>Feel free to drop us a line </p>
+      <p>Find us on </p>
+      <p><a href="/HTML/team.html" target="_blank" rel="noopener noreferrer">About Us</a></p>
+      <div class="copyright">© 2023 <span>logo</span> All Right Reserved</div>
+    </div>
+
+  </footer> -->
+  </body>
+</html>

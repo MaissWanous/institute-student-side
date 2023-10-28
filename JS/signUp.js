@@ -148,7 +148,7 @@ module.exports = {
             }
         }
         if (Cemail == false && email != "") {
-          test1 = "Not accept email";
+          test1 = "not accept email";
         }
 
         var test;
@@ -175,10 +175,10 @@ module.exports = {
             snaps = true;
           }
         }
-        code = Math.floor(Math.random() * 1000000);
-        console.log(code);
         try {
 
+          code = Math.floor(Math.random() * 1000000);
+          console.log(code);
           if (Cemail == true && Cregiste == true && test1 == "") {
             const nodemailer = require("nodemailer"); // Require the Nodemailer package
             async function main() {
@@ -209,13 +209,11 @@ module.exports = {
             snaps = true;
           }
         }
-
         res.send();
       });
     });
-    var wrong = true;
+    var wrong = "";
     app.post("/registe", async (req, res) => {
-      wrong = true;
       confCod = parseInt(req.body.code);
       console.log("code" + confCod);
       if (confCod == code) {
@@ -360,15 +358,13 @@ module.exports = {
           }
         });
 
+        res.sendFile(dic + "/HTML/registe.html");
       }
       else {
-        wrong = false
+        wrong = "W"
+        res.send();
       }
-      res.send();
     });
-    app.get("/ConfirmationCode", (req, res) => {
-      res.json({ wrong: wrong })
-    })
 
     let resSign;
     app.get("/confirm", (req, res) => {
@@ -437,7 +433,6 @@ module.exports = {
           name: name,
           email: email,
           tel: tel,
-          confCod: confCod,
 
           timen: timen,
           error: error,
